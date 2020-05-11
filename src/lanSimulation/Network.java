@@ -335,14 +335,14 @@ Write a printable representation of #receiver on the given #buf.
 		assert isInitialized();
 		Node currentNode = firstNode_;
 		do {
-			añadirTipoNodo(buf, currentNode);
+			aÃ±adirTipoNodo(buf, currentNode);
 			buf.append(" -> ");
 			currentNode = currentNode.nextNode_;
 		} while (currentNode != firstNode_);
 		buf.append(" ... ");
 	}
 
-	private void añadirTipoNodo(StringBuffer buf, Node currentNode) {
+	private void aÃ±adirTipoNodo(StringBuffer buf, Node currentNode) {
 		switch (currentNode.type_) {
 		case Node.NODE:
 			buf.append("Node ");
@@ -377,7 +377,7 @@ Write a HTML representation of #receiver on the given #buf.
 		buf.append("\n\n<UL>");
 		do {
 			buf.append("\n\t<LI> ");
-			añadirTipoNodo(buf, currentNode);
+			aÃ±adirTipoNodo(buf, currentNode);
 			buf.append(" </LI>");
 			currentNode = currentNode.nextNode_;
 		} while (currentNode != firstNode_);
