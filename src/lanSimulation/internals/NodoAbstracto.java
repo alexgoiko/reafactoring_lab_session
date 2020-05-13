@@ -1,7 +1,5 @@
 package lanSimulation.internals;
 
-import lanSimulation.Network;
-
 public abstract class NodoAbstracto {
 
 	/**
@@ -13,7 +11,6 @@ public abstract class NodoAbstracto {
 	@see lanSimulation.internals.Node
 	 */
 	public NodoAbstracto nextNode_;
-
 
 
 	public void printOn(StringBuffer buf) {}

@@ -7,9 +7,7 @@ public class Workstation extends NodoAbstracto {
 	}
 
 	public void printOn(StringBuffer buf) {
-		buf.append("Workstation ");
-		buf.append(name_);
-		buf.append(" [Workstation]");
+		añadirNombre(buf);
 	}
 
 	public void printXMLOn(StringBuffer buf) {
@@ -21,6 +19,10 @@ public class Workstation extends NodoAbstracto {
 	}
 	
 	public void printHTMLOn(StringBuffer buf) {
+		añadirNombre(buf);
+	}
+
+	private void añadirNombre(StringBuffer buf) {
 		buf.append("Workstation ");
 		buf.append(name_);
 		buf.append(" [Workstation]");

@@ -8,9 +8,7 @@ public class Printer extends NodoAbstracto {
 	}
 
 	public void printOn(StringBuffer buf) {
-		buf.append("Printer ");
-		buf.append(name_);
-		buf.append(" [Printer]");
+		añadirNombre(buf);
 	}
 	
 	public void printXMLOn(StringBuffer buf) {
@@ -21,6 +19,10 @@ public class Printer extends NodoAbstracto {
 	}
 	
 	public void printHTMLOn(StringBuffer buf) {
+		añadirNombre(buf);
+	}
+
+	private void añadirNombre(StringBuffer buf) {
 		buf.append("Printer ");
 		buf.append(name_);
 		buf.append(" [Printer]");

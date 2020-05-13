@@ -44,9 +44,7 @@ Construct a <em>Node</em> with given #type and #name, and which is linked to #ne
 	}
 	
 	public void printOn(StringBuffer buf) {
-		buf.append("Node ");
-		buf.append(name_);
-		buf.append(" [Node]");
+		añadirNombre(buf);
 	}
 	
 	public void printXMLOn(StringBuffer buf) {
@@ -58,6 +56,10 @@ Construct a <em>Node</em> with given #type and #name, and which is linked to #ne
 	}
 	
 	public void printHTMLOn(StringBuffer buf) {
+		añadirNombre(buf);
+	}
+
+	private void añadirNombre(StringBuffer buf) {
 		buf.append("Node ");
 		buf.append(name_);
 		buf.append(" [Node]");
