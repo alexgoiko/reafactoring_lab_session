@@ -18,7 +18,6 @@
  *   Copyright C++ version: 2006 Matthias Rieger, Bart Van Rompaey
  */
 package lanSimulation;
-
 import lanSimulation.internals.*;
 import java.util.Hashtable;
 import java.util.Enumeration;
@@ -38,12 +37,14 @@ public class Network {
     Holds a pointer to some "first" node in the token ring.
     Used to ensure that various printing operations return expected behaviour.
 	 */
-	private Node firstNode_;
+	public Node firstNode_;
 	/**
     Maps the names of workstations on the actual workstations.
     Used to initiate the requests for the network.
 	 */
 	private Hashtable workstations_;
+	
+	public Printer printer;
 
 	/**
 Construct a <em>Network</em> suitable for holding #size Workstations.
@@ -54,6 +55,7 @@ Construct a <em>Network</em> suitable for holding #size Workstations.
 		initPtr_ = this;
 		firstNode_ = null;
 		workstations_ = new Hashtable(size, 1.0f);
+		printer = new Printer();
 		assert isInitialized();
 		assert ! consistentNetwork();
 	}
@@ -323,101 +325,40 @@ Return a printable representation of #receiver.
 	public String toString () {
 		assert isInitialized();
 		StringBuffer buf = new StringBuffer(30 * workstations_.size());
-		printOn(buf);
+		printer.printOn(this, buf);
 		return buf.toString();
 	}
 
-	/**
-Write a printable representation of #receiver on the given #buf.
-<p><strong>Precondition:</strong> isInitialized();</p>
-	 */
-	public void printOn (StringBuffer buf) {
-		assert isInitialized();
-		Node currentNode = firstNode_;
-		do {
-			añadirTipoNodo(buf, currentNode);
-			buf.append(" -> ");
-			currentNode = currentNode.nextNode_;
-		} while (currentNode != firstNode_);
-		buf.append(" ... ");
+	public Network getInitPtr_() {
+		return initPtr_;
 	}
 
-	private void añadirTipoNodo(StringBuffer buf, Node currentNode) {
-		switch (currentNode.type_) {
-		case Node.NODE:
-			buf.append("Node ");
-			buf.append(currentNode.name_);
-			buf.append(" [Node]");
-			break;
-		case Node.WORKSTATION:
-			buf.append("Workstation ");
-			buf.append(currentNode.name_);
-			buf.append(" [Workstation]");
-			break;
-		case Node.PRINTER:
-			buf.append("Printer ");
-			buf.append(currentNode.name_);
-			buf.append(" [Printer]");
-			break;
-		default:
-			buf.append("(Unexpected)");;
-			break;
-		};
+	public void setInitPtr_(Network initPtr_) {
+		this.initPtr_ = initPtr_;
 	}
 
-	/**
-Write a HTML representation of #receiver on the given #buf.
- <p><strong>Precondition:</strong> isInitialized();</p>
-	 */
-	public void printHTMLOn (StringBuffer buf) {
-		assert isInitialized();
-
-		buf.append("<HTML>\n<HEAD>\n<TITLE>LAN Simulation</TITLE>\n</HEAD>\n<BODY>\n<H1>LAN SIMULATION</H1>");
-		Node currentNode = firstNode_;
-		buf.append("\n\n<UL>");
-		do {
-			buf.append("\n\t<LI> ");
-			añadirTipoNodo(buf, currentNode);
-			buf.append(" </LI>");
-			currentNode = currentNode.nextNode_;
-		} while (currentNode != firstNode_);
-		buf.append("\n\t<LI>...</LI>\n</UL>\n\n</BODY>\n</HTML>\n");
+	public Node getFirstNode_() {
+		return firstNode_;
 	}
 
-	/**
-Write an XML representation of #receiver on the given #buf.
-<p><strong>Precondition:</strong> isInitialized();</p>
-	 */
-	public void printXMLOn (StringBuffer buf) {
-		assert isInitialized();
+	public void setFirstNode_(Node firstNode_) {
+		this.firstNode_ = firstNode_;
+	}
 
-		Node currentNode = firstNode_;
-		buf.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n\n<network>");
-		do {
-			buf.append("\n\t");
-			switch (currentNode.type_) {
-			case Node.NODE:
-				buf.append("<node>");
-				buf.append(currentNode.name_);
-				buf.append("</node>");
-				break;
-			case Node.WORKSTATION:
-				buf.append("<workstation>");
-				buf.append(currentNode.name_);
-				buf.append("</workstation>");
-				break;
-			case Node.PRINTER:
-				buf.append("<printer>");
-				buf.append(currentNode.name_);
-				buf.append("</printer>");
-				break;
-			default:
-				buf.append("<unknown></unknown>");;
-				break;
-			};
-			currentNode = currentNode.nextNode_;
-		} while (currentNode != firstNode_);
-		buf.append("\n</network>");
+	public Hashtable getWorkstations_() {
+		return workstations_;
+	}
+
+	public void setWorkstations_(Hashtable workstations_) {
+		this.workstations_ = workstations_;
+	}
+
+	public Printer getPrinter() {
+		return printer;
+	}
+
+	public void setPrinter(Printer printer) {
+		this.printer = printer;
 	}
 
 }
