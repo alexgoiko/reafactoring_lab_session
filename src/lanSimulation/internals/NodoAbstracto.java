@@ -1,6 +1,6 @@
 package lanSimulation.internals;
 
-public abstract class NodoAbstracto {
+public abstract class NodoAbstracto implements INodo {
 
 	/**
 	Holds the name of the Node.
@@ -13,10 +13,22 @@ public abstract class NodoAbstracto {
 	public NodoAbstracto nextNode_;
 
 
+	/* (non-Javadoc)
+	 * @see lanSimulation.internals.INodo#printOn(java.lang.StringBuffer)
+	 */
+	@Override
 	public void printOn(StringBuffer buf) {}
 
+	/* (non-Javadoc)
+	 * @see lanSimulation.internals.INodo#XMLOn(java.lang.StringBuffer)
+	 */
+	@Override
 	public void XMLOn(StringBuffer buf) {}
 
+	/* (non-Javadoc)
+	 * @see lanSimulation.internals.INodo#printHTMLOn(java.lang.StringBuffer)
+	 */
+	@Override
 	public void printHTMLOn( StringBuffer buf) {}
 
 

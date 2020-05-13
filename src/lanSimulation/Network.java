@@ -103,10 +103,10 @@ Answer whether #receiver contains a workstation with the given name.
 	 */
 	public boolean hasWorkstation (String ws) {
 		//return workstations_.containsKey(ws);
-		NodoAbstracto n;
+		INodo n;
 
 		assert isInitialized();
-		n = (NodoAbstracto) workstations_.get(ws);
+		n = (INodo) workstations_.get(ws);
 		if (n == null) {
 			return false;
 		} else {
@@ -265,7 +265,7 @@ Therefore #receiver sends a packet across the token ring network, until either
 		return result;
 	}
 
-	private boolean printDocument (NodoAbstracto printer, Packet document, Writer report) {
+	private boolean printDocument (INodo printer, Packet document, Writer report) {
 		String author = "Unknown";
 		String title = "Untitled";
 		int startPos = 0, endPos = 0;
