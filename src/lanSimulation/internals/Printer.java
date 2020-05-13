@@ -83,7 +83,7 @@ public class Printer {
 		buf.append("\n\t<LI>...</LI>\n</UL>\n\n</BODY>\n</HTML>\n");
 	}
 
-	public void añadirTipoNodo(Network network, StringBuffer buf, Node currentNode) {
+	private void añadirTipoNodo(Network network, StringBuffer buf, Node currentNode) {
 		switch (currentNode.type_) {
 		case Node.NODE:
 			buf.append("Node ");
