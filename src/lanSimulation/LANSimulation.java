@@ -38,13 +38,13 @@ public class LANSimulation {
 		System.out.println(network);
 		System.out.println();
 
-		network.printer.printHTMLOn(network, buf);
+		network.printHTMLOn(network, buf);
 		System.out.println("---------------------------------HTML------------------------------------------");
 		System.out.println(buf.toString());
 		System.out.println();
 
 		buf.setLength(0);
-		network.printer.printXMLOn(network, buf);
+		network.printXMLOn(network, buf);
 		System.out.println("---------------------------------XML------------------------------------------");
 		System.out.println(buf.toString());
 		System.out.println();

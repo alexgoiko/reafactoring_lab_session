@@ -192,10 +192,10 @@ public class LANTests extends TestCase {
 	}
 
 	public void testBasicNode() {
-		Node node;
+		NodoAbstracto node;
 
-		node = new Node(Node.NODE, "n");
-		assertEquals("type_", node.type_, Node.NODE);
+		node = new Node("n");
+		//assertEquals("type_", node.type_, Node.NODE);
 		assertEquals("name_", node.name_, "n");
 		assertEquals("nextNode_", node.nextNode_, null);
 		node.nextNode_ = node;
@@ -261,11 +261,11 @@ public class LANTests extends TestCase {
 
 		try {
 			buf.append("---------------------------------ASCII------------------------------------------\n");
-			network.printer.printOn(network, buf);
+			network.printOn(network, buf);
 			buf.append("\n\n---------------------------------HTML------------------------------------------\n");
-			network.printer.printHTMLOn(network, buf);
+			network.printHTMLOn(network, buf);
 			buf.append("\n\n---------------------------------XML------------------------------------------\n");
-			network.printer.printXMLOn(network, buf);
+			network.printXMLOn(network, buf);
 			generateOutput.write(buf.toString());
 			report.write("\n\n---------------------------------SCENARIO: Print Success --------------------------\n");
 			network.requestWorkstationPrintsDocument("Filip", "Hello World", "Andy", report);

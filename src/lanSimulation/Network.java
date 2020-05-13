@@ -37,14 +37,14 @@ public class Network {
     Holds a pointer to some "first" node in the token ring.
     Used to ensure that various printing operations return expected behaviour.
 	 */
-	public Node firstNode_;
+	public NodoAbstracto firstNode_;
 	/**
     Maps the names of workstations on the actual workstations.
     Used to initiate the requests for the network.
 	 */
 	private Hashtable workstations_;
 	
-	public Printer printer;
+
 
 	/**
 Construct a <em>Network</em> suitable for holding #size Workstations.
@@ -55,7 +55,6 @@ Construct a <em>Network</em> suitable for holding #size Workstations.
 		initPtr_ = this;
 		firstNode_ = null;
 		workstations_ = new Hashtable(size, 1.0f);
-		printer = new Printer();
 		assert isInitialized();
 		assert ! consistentNetwork();
 	}
@@ -72,10 +71,10 @@ Currently, the network looks as follows.
 	public static Network DefaultExample () {
 		Network network = new Network (2);
 
-		Node wsFilip = new Node (Node.WORKSTATION, "Filip");
-		Node n1 = new Node(Node.NODE, "n1");
-		Node wsHans = new Node (Node.WORKSTATION, "Hans");
-		Node prAndy = new Node (Node.PRINTER, "Andy");
+		NodoAbstracto wsFilip = new Workstation ("Filip");
+		NodoAbstracto n1 = new Node("n1");
+		NodoAbstracto wsHans = new Workstation ("Hans");
+		NodoAbstracto prAndy = new Printer ("Andy");
 
 		wsFilip.nextNode_ = n1;
 		n1.nextNode_ = wsHans;
@@ -104,14 +103,14 @@ Answer whether #receiver contains a workstation with the given name.
 	 */
 	public boolean hasWorkstation (String ws) {
 		//return workstations_.containsKey(ws);
-		Node n;
+		NodoAbstracto n;
 
 		assert isInitialized();
-		n = (Node) workstations_.get(ws);
+		n = (NodoAbstracto) workstations_.get(ws);
 		if (n == null) {
 			return false;
 		} else {
-			return n.type_ == Node.WORKSTATION;
+			return n  instanceof Workstation;
 		}
 	};
 
@@ -127,7 +126,7 @@ A consistent token ring network
 	public boolean consistentNetwork () {
 		assert isInitialized();
 		Enumeration iter;
-		Node currentNode;
+		NodoAbstracto currentNode;
 		int printersFound = 0, workstationsFound = 0;
 		Hashtable encountered = new Hashtable(workstations_.size() * 2, 1.0f);
 
@@ -136,16 +135,16 @@ A consistent token ring network
 		//verify whether all registered workstations are indeed workstations
 		iter = workstations_.elements();
 		while (iter.hasMoreElements()) {
-			currentNode = (Node) iter.nextElement();
-			if (currentNode.type_ != Node.WORKSTATION) {return false;};
+			currentNode = (NodoAbstracto) iter.nextElement();
+			if (!(currentNode instanceof Workstation)) {return false;};
 		};
 		//enumerate the token ring, verifying whether all workstations are registered
 		//also count the number of printers and see whether the ring is circular
 		currentNode = firstNode_;
 		while (! encountered.containsKey(currentNode.name_)) {
 			encountered.put(currentNode.name_, currentNode);
-			if (currentNode.type_ == Node.WORKSTATION) {workstationsFound++;};
-			if (currentNode.type_ == Node.PRINTER) {printersFound++;};
+			if (currentNode instanceof Workstation) {workstationsFound++;};
+			if (currentNode instanceof Printer) {printersFound++;};
 			currentNode = currentNode.nextNode_;
 		};
 		if (currentNode != firstNode_) {return false;};//not circular
@@ -171,7 +170,7 @@ which should be treated by all nodes.
 			// just ignore
 		};
 
-		Node currentNode = firstNode_;
+		NodoAbstracto currentNode = firstNode_;
 		Packet packet = new Packet("BROADCAST", firstNode_.name_, firstNode_.name_);
 		do {
 			try {
@@ -224,10 +223,10 @@ Therefore #receiver sends a packet across the token ring network, until either
 		};
 
 		boolean result = false;
-		Node startNode, currentNode;
+		NodoAbstracto startNode, currentNode;
 		Packet packet = new Packet(document, workstation, printer);
 
-		startNode = (Node) workstations_.get(workstation);
+		startNode = (NodoAbstracto) workstations_.get(workstation);
 
 		try {
 			report.write("\tNode '");
@@ -266,12 +265,12 @@ Therefore #receiver sends a packet across the token ring network, until either
 		return result;
 	}
 
-	private boolean printDocument (Node printer, Packet document, Writer report) {
+	private boolean printDocument (NodoAbstracto printer, Packet document, Writer report) {
 		String author = "Unknown";
 		String title = "Untitled";
 		int startPos = 0, endPos = 0;
 
-		if (printer.type_ == Node.PRINTER) {
+		if (printer instanceof Printer) {
 			try {
 				if (document.message_.startsWith("!PS")) {
 					startPos = document.message_.indexOf("author:");
@@ -317,6 +316,66 @@ Therefore #receiver sends a packet across the token ring network, until either
 			return false;
 		}
 	}
+	
+	/**
+	Write a printable representation of #receiver on the given #buf.
+	<p><strong>Precondition:</strong> isInitialized();</p>
+	 * @param network TODO
+	 * @param buf TODO
+	 */
+	public void printOn(Network network, StringBuffer buf) {
+		assert network.isInitialized();
+		NodoAbstracto currentNode = network.getFirstNode_();
+		do {
+			currentNode.printOn(buf);
+			buf.append(" -> ");
+			currentNode = currentNode.nextNode_;
+		} while (currentNode != network.getFirstNode_());
+		buf.append(" ... ");
+	}
+	
+	/**
+	Write an XML representation of #receiver on the given #buf.
+	<p><strong>Precondition:</strong> isInitialized();</p>
+	 * @param network TODO
+	 * @param buf TODO
+	 */
+	public void printXMLOn(Network network, StringBuffer buf) {
+		assert network.isInitialized();
+		
+		NodoAbstracto currentNode = network.getFirstNode_();
+		buf.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n\n<network>");
+		do {
+			buf.append("\n\t");
+			currentNode.XMLOn(buf);
+			currentNode = currentNode.nextNode_;
+		} while (currentNode != network.getFirstNode_());
+		buf.append("\n</network>");
+	}
+	
+	/**
+	Write a HTML representation of #receiver on the given #buf.
+	<p><strong>Precondition:</strong> isInitialized();</p>
+	 * @param network TODO
+	 * @param buf TODO
+	 */
+	public void printHTMLOn(Network network, StringBuffer buf) {
+		assert network.isInitialized();
+	
+		buf.append("<HTML>\n<HEAD>\n<TITLE>LAN Simulation</TITLE>\n</HEAD>\n<BODY>\n<H1>LAN SIMULATION</H1>");
+		NodoAbstracto currentNode = network.getFirstNode_();
+		buf.append("\n\n<UL>");
+		do {
+			buf.append("\n\t<LI> ");
+			currentNode.printHTMLOn(buf);;
+			buf.append(" </LI>");
+			currentNode = currentNode.nextNode_;
+		} while (currentNode != network.getFirstNode_());
+		buf.append("\n\t<LI>...</LI>\n</UL>\n\n</BODY>\n</HTML>\n");
+	}
+	
+	
+	
 
 	/**
 Return a printable representation of #receiver.
@@ -325,7 +384,7 @@ Return a printable representation of #receiver.
 	public String toString () {
 		assert isInitialized();
 		StringBuffer buf = new StringBuffer(30 * workstations_.size());
-		printer.printOn(this, buf);
+		printOn(this, buf);
 		return buf.toString();
 	}
 
@@ -337,11 +396,11 @@ Return a printable representation of #receiver.
 		this.initPtr_ = initPtr_;
 	}
 
-	public Node getFirstNode_() {
+	public NodoAbstracto getFirstNode_() {
 		return firstNode_;
 	}
 
-	public void setFirstNode_(Node firstNode_) {
+	public void setFirstNode_(NodoAbstracto firstNode_) {
 		this.firstNode_ = firstNode_;
 	}
 
@@ -353,12 +412,5 @@ Return a printable representation of #receiver.
 		this.workstations_ = workstations_;
 	}
 
-	public Printer getPrinter() {
-		return printer;
-	}
-
-	public void setPrinter(Printer printer) {
-		this.printer = printer;
-	}
 
 }
