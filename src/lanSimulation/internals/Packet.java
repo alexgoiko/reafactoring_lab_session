@@ -62,32 +62,17 @@ Construct a <em>Packet</em> with given #message, #origin and #receiver.
 	public boolean printDocument (INodo printer, Network network, Writer report) {
 		String author = "Unknown";
 		String title = "Untitled";
-		int startPos = 0, endPos = 0;
-	
+
 		if (printer instanceof Printer) {
 			try {
-				if (getMessage_().startsWith("!PS")) {
-					startPos = getMessage_().indexOf("author:");
-					if (startPos >= 0) {
-						endPos = getMessage_().indexOf(".", startPos + 7);
-						if (endPos < 0) {endPos = getMessage_().length();};
-						author = getMessage_().substring(startPos + 7, endPos);};
-						startPos = getMessage_().indexOf("title:");
-						if (startPos >= 0) {
-							endPos = getMessage_().indexOf(".", startPos + 6);
-							if (endPos < 0) {endPos = getMessage_().length();};
-							title = getMessage_().substring(startPos + 6, endPos);};
-							printContabilidad(report, author, title, "Postscript");
-				} else {
-					title = "ASCII DOCUMENT";
-					if (getMessage_().length() >= 16) {
-						author = getMessage_().substring(8, 16);};
-						printContabilidad(report, author, title, "ASCII Print");
-				};
+				
+				printDoc(report, author, title);
+				
 			} catch (IOException exc) {
 				// just ignore
-			};
+			}
 			return true;
+			
 		} else {
 			try {
 				report.write(">>> Destinition is not a printer, print job cancelled.\n\n");
@@ -96,6 +81,29 @@ Construct a <em>Packet</em> with given #message, #origin and #receiver.
 				// just ignore
 			};
 			return false;
+		}
+	}
+
+	private void printDoc(Writer report, String author, String title) throws IOException {
+		int startPos = 0, endPos = 0;
+		
+		if (getMessage_().startsWith("!PS")) {
+			startPos = getMessage_().indexOf("author:");
+			if (startPos >= 0) {
+				endPos = getMessage_().indexOf(".", startPos + 7);
+				if (endPos < 0) {endPos = getMessage_().length();};
+				author = getMessage_().substring(startPos + 7, endPos);};
+				startPos = getMessage_().indexOf("title:");
+				if (startPos >= 0) {
+					endPos = getMessage_().indexOf(".", startPos + 6);
+					if (endPos < 0) {endPos = getMessage_().length();};
+					title = getMessage_().substring(startPos + 6, endPos);};
+					printContabilidad(report, author, title, "Postscript");
+		} else {
+			title = "ASCII DOCUMENT";
+			if (getMessage_().length() >= 16) {
+				author = getMessage_().substring(8, 16);};
+				printContabilidad(report, author, title, "ASCII Print");
 		}
 	}
 
