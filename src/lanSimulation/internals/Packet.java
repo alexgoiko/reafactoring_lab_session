@@ -45,18 +45,18 @@ public class Packet {
 Construct a <em>Packet</em> with given #message and #destination.
 	 */
 	public Packet(String message, String destination) {
-		message_ = message;
-		origin_ = "";
-		destination_ = destination;
+		setMessage_(message);
+		setOrigin_("");
+		setDestination_(destination);
 	}
 
 	/**
 Construct a <em>Packet</em> with given #message, #origin and #receiver.
 	 */
 	public Packet(String message, String origin, String destination) {
-		message_ = message;
-		origin_ = origin;
-		destination_ = destination;
+		setMessage_(message);
+		setOrigin_(origin);
+		setDestination_(destination);
 	}
 
 	public boolean printDocument (INodo printer, Network network, Writer report) {
@@ -66,22 +66,22 @@ Construct a <em>Packet</em> with given #message, #origin and #receiver.
 	
 		if (printer instanceof Printer) {
 			try {
-				if (message_.startsWith("!PS")) {
-					startPos = message_.indexOf("author:");
+				if (getMessage_().startsWith("!PS")) {
+					startPos = getMessage_().indexOf("author:");
 					if (startPos >= 0) {
-						endPos = message_.indexOf(".", startPos + 7);
-						if (endPos < 0) {endPos = message_.length();};
-						author = message_.substring(startPos + 7, endPos);};
-						startPos = message_.indexOf("title:");
+						endPos = getMessage_().indexOf(".", startPos + 7);
+						if (endPos < 0) {endPos = getMessage_().length();};
+						author = getMessage_().substring(startPos + 7, endPos);};
+						startPos = getMessage_().indexOf("title:");
 						if (startPos >= 0) {
-							endPos = message_.indexOf(".", startPos + 6);
-							if (endPos < 0) {endPos = message_.length();};
-							title = message_.substring(startPos + 6, endPos);};
+							endPos = getMessage_().indexOf(".", startPos + 6);
+							if (endPos < 0) {endPos = getMessage_().length();};
+							title = getMessage_().substring(startPos + 6, endPos);};
 							printContabilidad(report, author, title, "Postscript");
 				} else {
 					title = "ASCII DOCUMENT";
-					if (message_.length() >= 16) {
-						author = message_.substring(8, 16);};
+					if (getMessage_().length() >= 16) {
+						author = getMessage_().substring(8, 16);};
 						printContabilidad(report, author, title, "ASCII Print");
 				};
 			} catch (IOException exc) {

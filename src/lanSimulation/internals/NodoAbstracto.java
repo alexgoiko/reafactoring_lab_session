@@ -18,7 +18,7 @@ Construct a <em>NodoAbstracto</em> with given #type and #name.
 <p><strong>Precondition:</strong>
 	 */
 	public NodoAbstracto(String name) {
-		this.name_ = name;
+		this.setName_(name);
 	}
 
 	/**
@@ -26,8 +26,8 @@ Construct a <em>NodoAbstracto</em> with given #type and #name, and which is link
 <p><strong>Precondition:</strong>
 	 */
 	public NodoAbstracto(String name, NodoAbstracto nextNode) {
-		this.name_ = name;
-		this.nextNodo_ = nextNode;
+		this.setName_(name);
+		this.setNextNodo_(nextNode);
 	}
 
 	/* (non-Javadoc)
