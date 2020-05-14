@@ -185,7 +185,7 @@ which should be treated by all nodes.
 				// just ignore
 			};
 			currentNode = currentNode.getNextNodo_();
-		} while (! packet.destination_.equals(currentNode.getName_()));
+		} while (! packet.getDestination_().equals(currentNode.getName_()));
 
 		try {
 			report.write(">>> Broadcast travelled whole token ring.\n\n");
@@ -237,8 +237,8 @@ Therefore #receiver sends a packet across the token ring network, until either
 			// just ignore
 		};
 		currentNode = startNode.getNextNodo_();
-		while ((! packet.destination_.equals(currentNode.getName_()))
-				& (! packet.origin_.equals(currentNode.getName_()))) {
+		while ((! packet.getDestination_().equals(currentNode.getName_()))
+				& (! packet.getOrigin_().equals(currentNode.getName_()))) {
 			try {
 				report.write("\tNode '");
 				report.write(currentNode.getName_());
@@ -250,8 +250,8 @@ Therefore #receiver sends a packet across the token ring network, until either
 			currentNode = currentNode.getNextNodo_();
 		};
 
-		if (packet.destination_.equals(currentNode.getName_())) {
-			result = printDocument(currentNode, packet, report);
+		if (packet.getDestination_().equals(currentNode.getName_())) {
+			result = packet.printDocument(currentNode, this, report);
 		} else {
 			try {
 				report.write(">>> Destinition not found, print job cancelled.\n\n");
@@ -265,58 +265,6 @@ Therefore #receiver sends a packet across the token ring network, until either
 		return result;
 	}
 
-	private boolean printDocument (INodo printer, Packet document, Writer report) {
-		String author = "Unknown";
-		String title = "Untitled";
-		int startPos = 0, endPos = 0;
-
-		if (printer instanceof Printer) {
-			try {
-				if (document.message_.startsWith("!PS")) {
-					startPos = document.message_.indexOf("author:");
-					if (startPos >= 0) {
-						endPos = document.message_.indexOf(".", startPos + 7);
-						if (endPos < 0) {endPos = document.message_.length();};
-						author = document.message_.substring(startPos + 7, endPos);};
-						startPos = document.message_.indexOf("title:");
-						if (startPos >= 0) {
-							endPos = document.message_.indexOf(".", startPos + 6);
-							if (endPos < 0) {endPos = document.message_.length();};
-							title = document.message_.substring(startPos + 6, endPos);};
-							report.write("\tAccounting -- author = '");
-							report.write(author);
-							report.write("' -- title = '");
-							report.write(title);
-							report.write("'\n");
-							report.write(">>> Postscript job delivered.\n\n");
-							report.flush();
-				} else {
-					title = "ASCII DOCUMENT";
-					if (document.message_.length() >= 16) {
-						author = document.message_.substring(8, 16);};
-						report.write("\tAccounting -- author = '");
-						report.write(author);
-						report.write("' -- title = '");
-						report.write(title);
-						report.write("'\n");
-						report.write(">>> ASCII Print job delivered.\n\n");
-						report.flush();
-				};
-			} catch (IOException exc) {
-				// just ignore
-			};
-			return true;
-		} else {
-			try {
-				report.write(">>> Destinition is not a printer, print job cancelled.\n\n");
-				report.flush();
-			} catch (IOException exc) {
-				// just ignore
-			};
-			return false;
-		}
-	}
-	
 	/**
 	Write a printable representation of #receiver on the given #buf.
 	<p><strong>Precondition:</strong> isInitialized();</p>

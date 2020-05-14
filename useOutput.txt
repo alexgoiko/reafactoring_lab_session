@@ -37,7 +37,7 @@ Workstation Filip [Workstation] -> Node n1 [Node] -> Workstation Hans [Workstati
 	Node 'n1' passes packet on.
 	Node 'Hans' passes packet on.
 	Accounting -- author = 'Unknown' -- title = 'ASCII DOCUMENT'
->>> ASCII Print job delivered.
+>>> Postscript ASCII Print delivered.
 
 
 
@@ -72,7 +72,7 @@ Workstation Filip [Workstation] -> Node n1 [Node] -> Workstation Hans [Workstati
 	Node 'n1' passes packet on.
 	Node 'Hans' passes packet on.
 	Accounting -- author = 'Unknown' -- title = 'Untitled'
->>> Postscript job delivered.
+>>> Postscript Postscript delivered.
 
 
 

@@ -19,6 +19,11 @@
  */
 package lanSimulation.internals;
 
+import java.io.IOException;
+import java.io.Writer;
+
+import lanSimulation.Network;
+
 /**
 A <em>Packet</em> represents a unit of information to be sent over the Local Area Network (LAN).
  */
@@ -26,15 +31,15 @@ public class Packet {
 	/**
     Holds the actual message to be send over the network.
 	 */
-	public String message_;
+	private String message_;
 	/**
     Holds the name of the Node which initiated the request.
 	 */
-	public String origin_;
+	private String origin_;
 	/**
     Holds the name of the Node which should receive the information.
 	 */
-	public String destination_;
+	private String destination_;
 
 	/**
 Construct a <em>Packet</em> with given #message and #destination.
@@ -53,5 +58,81 @@ Construct a <em>Packet</em> with given #message, #origin and #receiver.
 		origin_ = origin;
 		destination_ = destination;
 	}
+
+	public boolean printDocument (INodo printer, Network network, Writer report) {
+		String author = "Unknown";
+		String title = "Untitled";
+		int startPos = 0, endPos = 0;
+	
+		if (printer instanceof Printer) {
+			try {
+				if (message_.startsWith("!PS")) {
+					startPos = message_.indexOf("author:");
+					if (startPos >= 0) {
+						endPos = message_.indexOf(".", startPos + 7);
+						if (endPos < 0) {endPos = message_.length();};
+						author = message_.substring(startPos + 7, endPos);};
+						startPos = message_.indexOf("title:");
+						if (startPos >= 0) {
+							endPos = message_.indexOf(".", startPos + 6);
+							if (endPos < 0) {endPos = message_.length();};
+							title = message_.substring(startPos + 6, endPos);};
+							printContabilidad(report, author, title, "Postscript");
+				} else {
+					title = "ASCII DOCUMENT";
+					if (message_.length() >= 16) {
+						author = message_.substring(8, 16);};
+						printContabilidad(report, author, title, "ASCII Print");
+				};
+			} catch (IOException exc) {
+				// just ignore
+			};
+			return true;
+		} else {
+			try {
+				report.write(">>> Destinition is not a printer, print job cancelled.\n\n");
+				report.flush();
+			} catch (IOException exc) {
+				// just ignore
+			};
+			return false;
+		}
+	}
+
+	private void printContabilidad(Writer report, String author, String title, String job) throws IOException {
+		report.write("\tAccounting -- author = '");
+		report.write(author);
+		report.write("' -- title = '");
+		report.write(title);
+		report.write("'\n");
+		report.write(">>> Postscript "+ job + " delivered.\n\n");
+		report.flush();
+	}
+
+	public String getMessage_() {
+		return message_;
+	}
+
+	public void setMessage_(String message_) {
+		this.message_ = message_;
+	}
+
+	public String getOrigin_() {
+		return origin_;
+	}
+
+	public void setOrigin_(String origin_) {
+		this.origin_ = origin_;
+	}
+
+	public String getDestination_() {
+		return destination_;
+	}
+
+	public void setDestination_(String destination_) {
+		this.destination_ = destination_;
+	}
+	
+	
 
 }
