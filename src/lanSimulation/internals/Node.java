@@ -31,16 +31,15 @@ Construct a <em>Node</em> with given #type and #name.
 <p><strong>Precondition:</strong> (type >= NODE) & (type <= PRINTER);</p>
 	 */
 	public Node(String name) {
-		super.name_ = name;
+		super(name);
 	}
 
 	/**
 Construct a <em>Node</em> with given #type and #name, and which is linked to #nextNode.
 <p><strong>Precondition:</strong> (type >= NODE) & (type <= PRINTER);</p>
 	 */
-	public Node(byte type, String name, NodoAbstracto nextNode) {
-		name_ = name;
-		nextNode_ = nextNode;
+	public Node(String name, NodoAbstracto nextNode) {
+		super(name,nextNode);
 	}
 	
 	public void printOn(StringBuffer buf) {
@@ -50,7 +49,7 @@ Construct a <em>Node</em> with given #type and #name, and which is linked to #ne
 	public void printXMLOn(StringBuffer buf) {
 
 		buf.append("<node>");
-		buf.append(name_);
+		buf.append(getName_());
 		buf.append("</node>");
 		
 	}
@@ -61,7 +60,7 @@ Construct a <em>Node</em> with given #type and #name, and which is linked to #ne
 
 	private void añadirNombre(StringBuffer buf) {
 		buf.append("Node ");
-		buf.append(name_);
+		buf.append(getName_());
 		buf.append(" [Node]");
 	}
 	

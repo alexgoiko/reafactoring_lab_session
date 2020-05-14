@@ -37,7 +37,7 @@ public class Network {
     Holds a pointer to some "first" node in the token ring.
     Used to ensure that various printing operations return expected behaviour.
 	 */
-	public NodoAbstracto firstNode_;
+	private NodoAbstracto firstNode_;
 	/**
     Maps the names of workstations on the actual workstations.
     Used to initiate the requests for the network.
@@ -76,13 +76,13 @@ Currently, the network looks as follows.
 		NodoAbstracto wsHans = new Workstation ("Hans");
 		NodoAbstracto prAndy = new Printer ("Andy");
 
-		wsFilip.nextNode_ = n1;
-		n1.nextNode_ = wsHans;
-		wsHans.nextNode_ = prAndy;
-		prAndy.nextNode_ = wsFilip;
+		wsFilip.setNextNodo_(n1);
+		n1.setNextNodo_(wsHans);
+		wsHans.setNextNodo_(prAndy);
+		prAndy.setNextNodo_(wsFilip);
 
-		network.workstations_.put(wsFilip.name_, wsFilip);
-		network.workstations_.put(wsHans.name_, wsHans);
+		network.workstations_.put(wsFilip.getName_(), wsFilip);
+		network.workstations_.put(wsHans.getName_(), wsHans);
 		network.firstNode_ = wsFilip;
 
 		assert network.isInitialized();
@@ -141,11 +141,11 @@ A consistent token ring network
 		//enumerate the token ring, verifying whether all workstations are registered
 		//also count the number of printers and see whether the ring is circular
 		currentNode = firstNode_;
-		while (! encountered.containsKey(currentNode.name_)) {
-			encountered.put(currentNode.name_, currentNode);
+		while (! encountered.containsKey(currentNode.getName_())) {
+			encountered.put(currentNode.getName_(), currentNode);
 			if (currentNode instanceof Workstation) {workstationsFound++;};
 			if (currentNode instanceof Printer) {printersFound++;};
-			currentNode = currentNode.nextNode_;
+			currentNode = currentNode.getNextNodo_();
 		};
 		if (currentNode != firstNode_) {return false;};//not circular
 		if (printersFound == 0) {return false;};//does not contain a printer
@@ -171,21 +171,21 @@ which should be treated by all nodes.
 		};
 
 		NodoAbstracto currentNode = firstNode_;
-		Packet packet = new Packet("BROADCAST", firstNode_.name_, firstNode_.name_);
+		Packet packet = new Packet("BROADCAST", firstNode_.getName_(), firstNode_.getName_());
 		do {
 			try {
 				report.write("\tNode '");
-				report.write(currentNode.name_);
+				report.write(currentNode.getName_());
 				report.write("' accepts broadcase packet.\n");
 				report.write("\tNode '");
-				report.write(currentNode.name_);
+				report.write(currentNode.getName_());
 				report.write("' passes packet on.\n");
 				report.flush();
 			} catch (IOException exc) {
 				// just ignore
 			};
-			currentNode = currentNode.nextNode_;
-		} while (! packet.destination_.equals(currentNode.name_));
+			currentNode = currentNode.getNextNodo_();
+		} while (! packet.destination_.equals(currentNode.getName_()));
 
 		try {
 			report.write(">>> Broadcast travelled whole token ring.\n\n");
@@ -230,27 +230,27 @@ Therefore #receiver sends a packet across the token ring network, until either
 
 		try {
 			report.write("\tNode '");
-			report.write(startNode.name_);
+			report.write(startNode.getName_());
 			report.write("' passes packet on.\n");
 			report.flush();
 		} catch (IOException exc) {
 			// just ignore
 		};
-		currentNode = startNode.nextNode_;
-		while ((! packet.destination_.equals(currentNode.name_))
-				& (! packet.origin_.equals(currentNode.name_))) {
+		currentNode = startNode.getNextNodo_();
+		while ((! packet.destination_.equals(currentNode.getName_()))
+				& (! packet.origin_.equals(currentNode.getName_()))) {
 			try {
 				report.write("\tNode '");
-				report.write(currentNode.name_);
+				report.write(currentNode.getName_());
 				report.write("' passes packet on.\n");
 				report.flush();
 			} catch (IOException exc) {
 				// just ignore
 			};
-			currentNode = currentNode.nextNode_;
+			currentNode = currentNode.getNextNodo_();
 		};
 
-		if (packet.destination_.equals(currentNode.name_)) {
+		if (packet.destination_.equals(currentNode.getName_())) {
 			result = printDocument(currentNode, packet, report);
 		} else {
 			try {
@@ -329,7 +329,7 @@ Therefore #receiver sends a packet across the token ring network, until either
 		do {
 			currentNode.printOn(buf);
 			buf.append(" -> ");
-			currentNode = currentNode.nextNode_;
+			currentNode = currentNode.getNextNodo_();
 		} while (currentNode != network.getFirstNode_());
 		buf.append(" ... ");
 	}
@@ -347,8 +347,8 @@ Therefore #receiver sends a packet across the token ring network, until either
 		buf.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n\n<network>");
 		do {
 			buf.append("\n\t");
-			currentNode.XMLOn(buf);
-			currentNode = currentNode.nextNode_;
+			currentNode.printXMLOn(buf);
+			currentNode = currentNode.getNextNodo_();
 		} while (currentNode != network.getFirstNode_());
 		buf.append("\n</network>");
 	}
@@ -369,7 +369,7 @@ Therefore #receiver sends a packet across the token ring network, until either
 			buf.append("\n\t<LI> ");
 			currentNode.printHTMLOn(buf);;
 			buf.append(" </LI>");
-			currentNode = currentNode.nextNode_;
+			currentNode = currentNode.getNextNodo_();
 		} while (currentNode != network.getFirstNode_());
 		buf.append("\n\t<LI>...</LI>\n</UL>\n\n</BODY>\n</HTML>\n");
 	}

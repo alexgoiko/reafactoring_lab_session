@@ -3,7 +3,10 @@ package lanSimulation.internals;
 public class Workstation extends NodoAbstracto {
 
 	public Workstation(String name) {
-		super.name_ = name;
+		super(name);
+	}
+	public Workstation(String name, NodoAbstracto nextNode) {
+		super(name,nextNode);
 	}
 
 	public void printOn(StringBuffer buf) {
@@ -13,7 +16,7 @@ public class Workstation extends NodoAbstracto {
 	public void printXMLOn(StringBuffer buf) {
 
 		buf.append("<workstation>");
-		buf.append(name_);
+		buf.append(getName_());
 		buf.append("</workstation>");
 
 	}
@@ -24,7 +27,7 @@ public class Workstation extends NodoAbstracto {
 
 	private void añadirNombre(StringBuffer buf) {
 		buf.append("Workstation ");
-		buf.append(name_);
+		buf.append(getName_());
 		buf.append(" [Workstation]");
 	}
 

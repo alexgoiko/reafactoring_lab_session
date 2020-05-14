@@ -25,10 +25,10 @@ Workstation Filip [Workstation] -> Node n1 [Node] -> Workstation Hans [Workstati
 <?xml version="1.0" encoding="UTF-8"?>
 
 <network>
-	
-	
-	
-	
+	<workstation>Filip</workstation>
+	<node>n1</node>
+	<workstation>Hans</workstation>
+	<printer>Andy</printer>
 </network>
 
 ---------------------------------SCENARIO: Print Success --------------------------
